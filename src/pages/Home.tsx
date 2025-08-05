@@ -5,36 +5,41 @@ import { useWalletStore } from '../store/walletStore';
 import { useEffect, useState } from 'react';
 import { WalletOutlined } from '@ant-design/icons';
 import { ethers } from 'ethers';
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 const { Title, Text } = Typography;
 
 const Home = () => {
-    const { address, setAddress } = useWalletStore();
-    const [network, setNetwork] = useState<string>('未知');
+  const { address, setAddress } = useWalletStore();
+  const [network, setNetwork] = useState<string>('未知');
 
-    const handleConnect = async () => {
-        try {
-            const addr = await connectWallet();
-            setAddress(addr);
-            message.success('连接成功: ' + addr);
-        } catch (err: any) {
-            message.error(err.message);
-        }
-    };
+  const handleConnect = async () => {
+    try {
+      const addr = await connectWallet();
+      setAddress(addr);
+      message.success('连接成功: ' + addr);
+    } catch (err: any) {
+      message.error(err.message);
+    }
+  };
 
-    const fetchNetwork = async () => {
-        if (window.ethereum) {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const net = await provider.getNetwork();
-            setNetwork(net.name); // 比如 'homestead'，可转换为 'Ethereum Mainnet'
-        }
-    };
+  const fetchNetwork = async () => {
+    if (window.ethereum) {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const net = await provider.getNetwork();
+      setNetwork(net.name); // 比如 'homestead'，可转换为 'Ethereum Mainnet'
+    }
+  };
 
-    useEffect(() => {
-        if (address) fetchNetwork();
-    }, [address]);
+  useEffect(() => {
+    if (address) fetchNetwork();
+  }, [address]);
 
-    return (
+  return (
     <div style={{ padding: 32, maxWidth: 600, margin: '0 auto' }}>
       <Card
         bordered={false}
@@ -62,14 +67,14 @@ const Home = () => {
             </Button>
 
             {
-        address && (
-            <Alert
-                message="当前网络"
-        description = { network }
-        type ="success"
-        showIcon
-            />
-            )}
+              address && (
+                <Alert
+                  message="当前网络"
+                  description={network}
+                  type="success"
+                  showIcon
+                />
+              )}
           </Space >
         </div >
       </Card >
