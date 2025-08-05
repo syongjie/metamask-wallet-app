@@ -1,0 +1,143 @@
+import {
+  Card,
+  Typography,
+  Space,
+  Descriptions,
+  Button,
+  Divider,
+  message,
+  Avatar,
+  Switch,
+  Select,
+  Row,
+  Col,
+} from 'antd';
+import {
+  CopyOutlined,
+  QrcodeOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  GlobalOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { useWalletStore } from '../store/walletStore';
+import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+
+const { Title, Text } = Typography;
+
+const Profile = () => {
+  const { address, setAddress } = useWalletStore();
+  const [balance, setBalance] = useState<string>('0.0000');
+  const [network, setNetwork] = useState<string>('未知');
+  const [darkMode, setDarkMode] = useState(false);
+  const [language, setLanguage] = useState('zh');
+
+  const fetchWalletData = async () => {
+    if (window.ethereum && address) {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const net = await provider.getNetwork();
+      const bal = await provider.getBalance(address);
+      setBalance(ethers.formatEther(bal));
+      setNetwork(net.name);
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletData();
+  }, [address]);
+
+  const handleCopy = () => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+      message.success('地址已复制');
+    }
+  };
+
+  const handleDisconnect = () => {
+    setAddress('');
+    message.success('已断开钱包连接');
+  };
+
+  return (
+    <div style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
+      <Card bordered>
+        <Space align="center" style={{ width: '100%' }}>
+          <Avatar size={64} icon={<UserOutlined />} />
+          <div>
+            <Title level={4} style={{ marginBottom: 0 }}>
+              我的钱包
+            </Title>
+            {address ? (
+              <Space>
+                <Text copyable={{ text: address }}>{address}</Text>
+                <Button icon={<CopyOutlined />} size="small" onClick={handleCopy}>
+                  复制地址
+                </Button>
+              </Space>
+            ) : (
+              <Text type="warning">未连接钱包</Text>
+            )}
+          </div>
+        </Space>
+
+        <Divider />
+
+        {address && (
+          <>
+            <Descriptions column={1} size="small">
+              <Descriptions.Item label="余额">{balance} ETH</Descriptions.Item>
+              <Descriptions.Item label="网络">{network}</Descriptions.Item>
+              <Descriptions.Item label="钱包类型">MetaMask</Descriptions.Item>
+            </Descriptions>
+
+            <Divider />
+
+            <Row gutter={16}>
+              <Col xs={24} sm={12} md={8}>
+                <Button icon={<QrcodeOutlined />} block>
+                  收款二维码
+                </Button>
+              </Col>
+              <Col xs={24} sm={12} md={8}>
+                <Button icon={<LogoutOutlined />} danger block onClick={handleDisconnect}>
+                  断开连接
+                </Button>
+              </Col>
+              <Col xs={24} sm={12} md={8}>
+                <Button icon={<SettingOutlined />} block>
+                  钱包设置
+                </Button>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Title level={5}>偏好设置</Title>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Space>
+                <GlobalOutlined />
+                <span>语言：</span>
+                <Select
+                  value={language}
+                  onChange={(value) => setLanguage(value)}
+                  options={[
+                    { label: '简体中文', value: 'zh' },
+                    { label: 'English', value: 'en' },
+                  ]}
+                  style={{ width: 120 }}
+                />
+              </Space>
+              <Space>
+                <span>夜间模式：</span>
+                <Switch checked={darkMode} onChange={setDarkMode} />
+              </Space>
+            </Space>
+          </>
+        )}
+      </Card>
+    </div>
+  );
+};
+
+export default Profile;
