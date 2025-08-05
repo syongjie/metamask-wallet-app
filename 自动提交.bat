@@ -56,7 +56,7 @@ IF %ERRORLEVEL% EQU 0 (
 )
 
 REM 推送代码到远程
-git push -u origin main
+git push -u origin master
 IF %ERRORLEVEL% NEQ 0 (
     echo ❌ 推送失败！
     pause
