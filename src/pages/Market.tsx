@@ -1,6 +1,7 @@
 // pages/Market.tsx
 import { Table, Avatar, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import styles from './Market.module.css'
 
 interface TokenMarket {
   key: string;
@@ -87,8 +88,9 @@ const columns: ColumnsType<TokenMarket> = [
 const Market = () => {
   return (
     <div style={{ padding: 24 }}>
-      <h2>市场行情</h2>
+      <h2 style={{color:'white'}}>市场行情</h2>
       <Table
+        style={{background:'rgba(153, 79, 79, 0.5)',border:'none'}}
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 5 }}

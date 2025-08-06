@@ -61,7 +61,7 @@ const Profile = () => {
 
   return (
     <div style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
-      <Card bordered>
+      <Card bordered style={{background:'rgba(174, 97, 97, 0.5)',border:'none'}}>
         <Space align="center" style={{ width: '100%' }}>
           <Avatar size={64} icon={<UserOutlined />} />
           <div>
@@ -95,17 +95,17 @@ const Profile = () => {
 
             <Row gutter={16}>
               <Col xs={24} sm={12} md={8}>
-                <Button icon={<QrcodeOutlined />} block>
+                <Button icon={<QrcodeOutlined />} style={{background:'rgba(148, 14, 14, 0.5)'}} block>
                   收款二维码
                 </Button>
               </Col>
               <Col xs={24} sm={12} md={8}>
-                <Button icon={<LogoutOutlined />} danger block onClick={handleDisconnect}>
+                <Button icon={<LogoutOutlined />} danger block onClick={handleDisconnect}  style={{background:'rgba(148, 14, 14, 0.5)'}}>
                   断开连接
                 </Button>
               </Col>
               <Col xs={24} sm={12} md={8}>
-                <Button icon={<SettingOutlined />} block>
+                <Button icon={<SettingOutlined />} style={{background:'rgba(148, 14, 14, 0.5)'}} block>
                   钱包设置
                 </Button>
               </Col>

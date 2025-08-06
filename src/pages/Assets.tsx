@@ -1,33 +1,59 @@
-// pages/Assets.tsx
+import React, { useEffect, useState } from 'react';
 import { Card, Statistic, Row, Col, Button, Space, List, Avatar, Divider } from 'antd';
 import { SwapOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { getTokenBalance } from '../utils/Balance ';
+import { ethers } from 'ethers';
 
-const mockTokens = [
-  {
-    name: 'ETH',
-    symbol: 'ETH',
-    balance: '1.245',
-    valueUSD: 4000,
-    icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-  },
-  {
-    name: 'USDT',
-    symbol: 'USDT',
-    balance: '2300',
-    valueUSD: 2300,
-    icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
-  },
-];
+const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // USDT
 
 const Assets = () => {
+  const [tokenBalance, setTokenBalance] = useState(null);
+  const [userAddress, setUserAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        setUserAddress(address);
+
+        const result = await getTokenBalance(address, tokenAddress, provider);
+        console.log("Token Balance Result:", result);
+        setTokenBalance(result);
+      } catch (error) {
+        console.error("获取代币余额失败:", error);
+      }
+    };
+
+    fetchBalance();
+  }, []);
+
+  const mockTokens = [
+    {
+      name: 'ETH',
+      symbol: 'ETH',
+      balance: '1.245',
+      valueUSD: 4000,
+      icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+    },
+    {
+      name: tokenBalance?.symbol || 'USDT',
+      symbol: tokenBalance?.symbol || 'USDT',
+      balance: tokenBalance?.balance || '0',
+      valueUSD: parseFloat(tokenBalance?.balance || '0'),
+      icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
+    },
+  ];
+
   return (
     <div style={{ padding: 24 }}>
       <Row gutter={16}>
         <Col span={24}>
-          <Card>
+          <Card style={{ backgroundColor: 'rgba(196, 138, 138, 0.5)',border:'none',}}>
             <Statistic
               title="总资产估值（USD）"
-              value={6300}
+              value={mockTokens.reduce((sum, item) => sum + item.valueUSD, 0)}
               precision={2}
               valueStyle={{ color: '#3f8600' }}
               prefix="$"
@@ -41,16 +67,16 @@ const Assets = () => {
       <Row gutter={16} style={{ marginBottom: 20 }}>
         <Col>
           <Space>
-            <Button type="primary" icon={<UploadOutlined />}>转账</Button>
-            <Button type="default" icon={<DownloadOutlined />}>收款</Button>
-            <Button type="dashed" icon={<SwapOutlined />}>闪兑</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)',border:'none'}} type="primary" icon={<UploadOutlined />}>转账</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)',border:'none'}} type="default" icon={<DownloadOutlined />}>收款</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)',border:'none'}} type="dashed" icon={<SwapOutlined />}>闪兑</Button>
           </Space>
         </Col>
       </Row>
 
       <Row gutter={16}>
         <Col span={24}>
-          <Card title="代币资产">
+          <Card title="代币资产"  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)',border:'none'}}>
             <List
               itemLayout="horizontal"
               dataSource={mockTokens}

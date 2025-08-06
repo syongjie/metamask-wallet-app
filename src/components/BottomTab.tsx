@@ -12,7 +12,7 @@ const BottomTab = () => {
       mode="horizontal"
       selectedKeys={[location.pathname]}
       onClick={({ key }) => navigate(key)}
-      style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 100, borderTop: '1px solid #eee' }}
+      style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 100, borderTop: '1px solid #eee',display: 'flex',justifyContent:'center', backgroundColor: 'rgba(161, 155, 155, 0.5)' }}
     >
       <Menu.Item key="/home" icon={<HomeOutlined />}>首页</Menu.Item>
       <Menu.Item key="/assets" icon={<WalletOutlined />}>资产</Menu.Item>
@@ -24,3 +24,4 @@ const BottomTab = () => {
 };
 
 export default BottomTab;
+    

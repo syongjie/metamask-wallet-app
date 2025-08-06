@@ -5,6 +5,9 @@ import { useWalletStore } from '../store/walletStore';
 import { useEffect, useState } from 'react';
 import { WalletOutlined } from '@ant-design/icons';
 import { ethers } from 'ethers';
+import React from 'react';
+import NetworkAlert from '../components/NetworkAlert';
+
 declare global {
   interface Window {
     ethereum?: any;
@@ -40,10 +43,10 @@ const Home = () => {
   }, [address]);
 
   return (
-    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto' }}>
+    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto',}}>
       <Card
         bordered={false}
-        style={{ textAlign: 'center' }}
+        style={{ textAlign: 'center',backgroundColor: 'rgba(0, 0, 0, 0)' }}
         cover={
           <img
             alt="wallet"
@@ -68,12 +71,14 @@ const Home = () => {
 
             {
               address && (
-                <Alert
-                  message="当前网络"
-                  description={network}
-                  type="success"
-                  showIcon
-                />
+                <NetworkAlert />
+                // <Alert
+                //   message="当前网络"
+                //   description={network}
+                //   type="success"
+                //   showIcon
+                //   style={{ marginTop: 16 }}
+                // />
               )}
           </Space >
         </div >

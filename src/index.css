@@ -1,6 +1,10 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-image: url(./assets/back.jpeg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;  
 }
 
 #root {
