@@ -1,4 +1,4 @@
-// utils/Balance .ts
+// utils/Balance .ts 合约查询USDT币
 import { ethers } from 'ethers';
 
 const ERC20_ABI = [
