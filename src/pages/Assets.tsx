@@ -7,12 +7,14 @@ import { ethers } from 'ethers';
 // const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // 以太坊USDT官方合约地址
 const tokenAddress = "0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47"; // Bsc测试网合约地址
 const Assets = () => {
-  const [tokenBalance, setTokenBalance] = useState({
-  symbol: 'string',
-  balance: 'string',
-  rawBalance: 'bigint'
-});
-const [userAddress, setUserAddress] = useState<string | null>(null);
+ type TokenBalance = {
+  symbol: string;
+  balance: string;
+  rawBalance: bigint;
+};
+
+const [tokenBalance, setTokenBalance] = useState<TokenBalance | null>(null);
+const [_userAddress, setUserAddress] = useState<string | null>(null);
 
 useEffect(() => {
   const fetchBalance = async () => {
