@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Card, Statistic, Row, Col, Button, Space, List, Avatar, Divider } from 'antd';
+import { useEffect, useState,useMemo } from 'react';
+import { Card, Statistic, Row, Col, Button, Space, List, Avatar, Divider,Skeleton,Empty } from 'antd';
 import { SwapOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 // import { getTokenBalance } from '../utils/Balance ';
 import { ethers } from 'ethers';
@@ -19,32 +19,32 @@ const Assets = () => {
   // const [tokenBalance, setTokenBalance] = useState<TokenBalance | null>(null);
   // const [_userAddress, setUserAddress] = useState<string | null>(null);
 
-  const provider = new ethers.BrowserProvider(window.ethereum);
+  // const provider = new ethers.BrowserProvider(window.ethereum);
+  const provider = useMemo(() => new ethers.BrowserProvider(window.ethereum), []);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  const [tokenList, setTokenList] = useState<TokenMeta[]>([]);
-  const { balances } = useMultiTokenBalances(userAddress, provider, tokenList);
-
+  // const [tokenList, setTokenList] = useState<TokenMeta[]>([]);
+  const tokenList = useMemo<TokenMeta[]>(() => [
+  {
+    name: 'BNB',
+    symbol: 'BNB',
+    address: null,
+    icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
+  },
+  {
+    name: 'USDT',
+    symbol: 'USDT',
+    address: '0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47', // BSC Testnet
+    icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
+  },
+], []);
+  const { balances,loading } = useMultiTokenBalances(userAddress, provider, tokenList);
+ 
   // 初始化用户地址和代币列表
   useEffect(() => {
     const init = async () => {
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
       setUserAddress(address);
-
-      setTokenList([
-        {
-          name: 'BNB',
-          symbol: 'BNB',
-          address: null,
-          icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
-        },
-        {
-          name: 'USDT',
-          symbol: 'USDT',
-          address: '0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47', // BSC Testnet USDT
-          icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
-        },
-      ]);
     };
     init();
   }, []);
@@ -88,24 +88,33 @@ const Assets = () => {
 
   //   fetchBalance();
   // }, []);
-  
-  const mockTokens = balances.map(item => ({
-    name: item.symbol,
-    symbol: item.symbol,
-    balance: item.balance,
-    valueUSD: parseFloat(item.balance) * (item.symbol === 'BNB' ? 500 : 1), // 自行设定估值
-    icon: item.icon,
-  }));
 
-  // const mockTokens = [
-  //   {
-  //     name: tokenBalance?.symbol || 'BNB',
-  //     symbol: tokenBalance?.symbol || 'BNB',
-  //     balance: tokenBalance?.balance || '0',
-  //     valueUSD: parseFloat(tokenBalance?.balance || '0') * 500, // 假设 BNB = 500USD
-  //     icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
-  //   },
-  // ];
+  // 使用 useMemo 优化 mockTokens 构建
+  const mockTokens = useMemo(() => {
+    return balances.map(item => {
+      const balance = parseFloat(item.balance || '0');
+      const valueUSD = isNaN(balance)
+        ? 0
+        : balance * (item.symbol === 'BNB' ? 500 : 1); // 手动估值逻辑
+      return {
+        name: item.symbol,
+        symbol: item.symbol,
+        balance: item.balance,
+        valueUSD,
+        icon: item.icon,
+      };
+    });
+  }, [balances]);
+
+  const totalValueUSD = useMemo(() => {
+    console.log(mockTokens);
+    
+    if (loading) return 0;
+    return mockTokens.reduce((sum, item) => {
+      const v = typeof item.valueUSD === 'number' && !isNaN(item.valueUSD) ? item.valueUSD : 0;
+      return sum + v;
+    }, 0);
+  }, [mockTokens, loading]);
 
 
   // const mockTokens = [
@@ -127,20 +136,20 @@ const Assets = () => {
 
   return (
     <div style={{ padding: 24 }}>
+      
       <Row gutter={16}>
         <Col span={24}>
-          <Card style={{ backgroundColor: 'rgba(196, 138, 138, 0.5)', border: 'none', }}>
-            <Statistic
+          {loading ? (
+            <Skeleton active paragraph={{ rows: 1 }} />
+          ) : (
+            <Statistic  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none',borderRadius:'20px',minHeight:'100px',padding:'18px 20px', }}
               title="总资产估值（USD）"
-              value={mockTokens.reduce((sum, item) => {
-                const v = typeof item.valueUSD === 'number' && !isNaN(item.valueUSD) ? item.valueUSD : 0;
-                return sum + v;
-              }, 0)}
+              value={totalValueUSD}
               precision={2}
               valueStyle={{ color: '#3f8600' }}
               prefix="$"
             />
-          </Card>
+          )}
         </Col>
       </Row>
 
@@ -157,8 +166,12 @@ const Assets = () => {
       </Row>
 
       <Row gutter={16}>
-        <Col span={24}>
-          <Card title="代币资产" style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none' }}>
+        <Col span={24}  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none',borderRadius:'20px', }}>
+          {loading ? (
+            <Skeleton active paragraph={{ rows: 4 }} />
+          ) : !userAddress ? (
+            <Empty description="请先连接钱包查看资产" />
+          ) : (
             <List
               itemLayout="horizontal"
               dataSource={mockTokens}
@@ -169,11 +182,11 @@ const Assets = () => {
                     title={`${item.name} (${item.symbol})`}
                     description={`余额: ${item.balance}`}
                   />
-                  <div>${item.valueUSD}</div>
+                  <div>${item.valueUSD.toFixed(2)}</div>
                 </List.Item>
               )}
             />
-          </Card>
+          )}
         </Col>
       </Row>
     </div>
