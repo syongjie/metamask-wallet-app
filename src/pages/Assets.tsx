@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Statistic, Row, Col, Button, Space, List, Avatar, Divider } from 'antd';
 import { SwapOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { getTokenBalance } from '../utils/Balance ';
 import { ethers } from 'ethers';
 
-const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // USDT
-
+// const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // 以太坊USDT官方合约地址
+const tokenAddress = "0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47"; // Bsc测试网合约地址
 const Assets = () => {
   const [tokenBalance, setTokenBalance] = useState(null);
   const [userAddress, setUserAddress] = useState<string | null>(null);

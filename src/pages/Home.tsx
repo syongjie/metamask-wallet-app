@@ -2,10 +2,9 @@
 import { Button, Card, Typography, message, Space, Alert } from 'antd';
 import { connectWallet } from '../services/wallet';
 import { useWalletStore } from '../store/walletStore';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { WalletOutlined } from '@ant-design/icons';
-import { ethers } from 'ethers';
-import React from 'react';
+// import { ethers } from 'ethers';
 import NetworkAlert from '../components/NetworkAlert';
 
 declare global {
@@ -18,7 +17,7 @@ const { Title, Text } = Typography;
 
 const Home = () => {
   const { address, setAddress } = useWalletStore();
-  const [network, setNetwork] = useState<string>('未知');
+  // const [network, setNetwork] = useState<string>('未知');
 
   const handleConnect = async () => {
     try {
@@ -30,23 +29,23 @@ const Home = () => {
     }
   };
 
-  const fetchNetwork = async () => {
-    if (window.ethereum) {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const net = await provider.getNetwork();
-      setNetwork(net.name); // 比如 'homestead'，可转换为 'Ethereum Mainnet'
-    }
-  };
+  // const fetchNetwork = async () => {
+  //   if (window.ethereum) {
+  //     const provider = new ethers.BrowserProvider(window.ethereum);
+  //     const net = await provider.getNetwork();
+  //     setNetwork(net.name); // 比如 'homestead'，可转换为 'Ethereum Mainnet'
+  //   }
+  // };
 
-  useEffect(() => {
-    if (address) fetchNetwork();
-  }, [address]);
+  // useEffect(() => {
+  //   if (address) fetchNetwork();
+  // }, [address]);
 
   return (
-    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto',}}>
+    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto', }}>
       <Card
         bordered={false}
-        style={{ textAlign: 'center',backgroundColor: 'rgba(0, 0, 0, 0)' }}
+        style={{ textAlign: 'center', backgroundColor: 'rgba(0, 0, 0, 0)' }}
         cover={
           <img
             alt="wallet"
