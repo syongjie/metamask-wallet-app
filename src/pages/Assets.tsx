@@ -22,7 +22,7 @@ const Assets = () => {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const [tokenList, setTokenList] = useState<TokenMeta[]>([]);
-  const { balances, loading } = useMultiTokenBalances(userAddress, provider, tokenList);
+  const { balances } = useMultiTokenBalances(userAddress, provider, tokenList);
 
   // 初始化用户地址和代币列表
   useEffect(() => {
@@ -88,7 +88,7 @@ const Assets = () => {
 
   //   fetchBalance();
   // }, []);
-
+  
   const mockTokens = balances.map(item => ({
     name: item.symbol,
     symbol: item.symbol,
