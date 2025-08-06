@@ -1,5 +1,5 @@
 // pages/Home.tsx
-import { Button, Card, Typography, message, Space, Alert } from 'antd';
+import { Button, Card, Typography, message, Space } from 'antd';
 import { connectWallet } from '../services/wallet';
 import { useWalletStore } from '../store/walletStore';
 // import { useEffect, useState } from 'react';
