@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface WalletState {
-  address: string | null;
+  address: string | null; 
   setAddress: (addr: string) => void;
 }
 
