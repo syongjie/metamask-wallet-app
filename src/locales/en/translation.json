@@ -1,0 +1,17 @@
+{
+  "profile_title": "Profile",
+  "wallet_title": "My Wallet",
+  "wallet_disconnected": "Wallet not connected",
+  "copy_address": "Copy Address",
+  "balance": "Balance",
+  "network": "Network",
+  "wallet_type": "Wallet Type",
+  "receive_qr_code": "Receive QR Code",
+  "disconnect": "Disconnect",
+  "wallet_settings": "Wallet Settings",
+  "preferences": "Preferences",
+  "language": "Language",
+  "language_zh": "简体中文",
+  "language_en": "English",
+  "dark_mode": "Dark Mode"
+}

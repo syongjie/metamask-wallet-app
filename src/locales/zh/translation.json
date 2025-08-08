@@ -1,0 +1,17 @@
+{
+  "profile_title": "我的",
+  "wallet_title": "我的钱包",
+  "wallet_disconnected": "未连接钱包",
+  "copy_address": "复制地址",
+  "balance": "余额",
+  "network": "网络",
+  "wallet_type": "钱包类型",
+  "receive_qr_code": "收款二维码",
+  "disconnect": "断开连接",
+  "wallet_settings": "钱包设置",
+  "preferences": "偏好设置",
+  "language": "语言",
+  "language_zh": "简体中文",
+  "language_en": "English",
+  "dark_mode": "夜间模式"
+}

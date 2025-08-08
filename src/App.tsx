@@ -6,6 +6,7 @@ import Market from './pages/Market';
 import Discover from './pages/Discover';
 import Profile from './pages/Profile';
 import BottomTab from './components/BottomTab';
+import './i18n'
 
 const App = () => {
   return (
