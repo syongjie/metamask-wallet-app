@@ -5,6 +5,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // 导入你的翻译文件
 import translation_zh from './locales/zh/translation.json';
 import translation_en from './locales/en/translation.json';
+import translation_ko from './locales/ko/translation.json';
+import translation_ja from './locales/ja/translation.json';
+
 
 const resources = {
   zh: {
@@ -12,6 +15,12 @@ const resources = {
   },
   en: {
     translation: translation_en,
+  },
+  ko: {
+    translation: translation_ko,
+  },
+  ja: {
+    translation: translation_ja,
   },
 };
 
@@ -21,6 +30,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'zh', // 如果当前语言没有翻译，则回退到中文
+    supportedLngs: ['zh', 'en', 'ko', 'ja'],
     interpolation: {
       escapeValue: false, // react 已经自带 xss 防护
     },

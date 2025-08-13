@@ -7,6 +7,7 @@ import { WalletOutlined } from '@ant-design/icons';
 // import { ethers } from 'ethers';
 import NetworkAlert from '../components/NetworkAlert';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../components/ThemeContext';
 
 declare global {
   interface Window {
@@ -18,6 +19,8 @@ const { Title, Text } = Typography;
 
 const Home = () => {
    const { t } = useTranslation();
+   const { darkMode } = useTheme();
+
   const { address, setAddress } = useWalletStore();
   // const [network, setNetwork] = useState<string>('未知');
 
@@ -44,7 +47,7 @@ const Home = () => {
   // }, [address]);
 
   return (
-    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto', marginTop:100 }}>
+    <div style={{ color: darkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)', padding: 32, maxWidth: 600, margin: '0 auto', marginTop:100 }}>
       <Card
         bordered={false}
         style={{ textAlign: 'center', backgroundColor: 'rgba(0, 0, 0, 0)' }}

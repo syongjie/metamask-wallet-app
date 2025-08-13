@@ -1,7 +1,7 @@
 // pages/Discover.tsx
 import { Card, Typography, Avatar, Tag, Row, Col, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
-
+import { useTheme } from '../components/ThemeContext';
 const { Title, Text } = Typography;
 
 const dapps = [
@@ -30,8 +30,9 @@ const dapps = [
 
 const Discover = () => {
   const { t } = useTranslation();
+   const { darkMode } = useTheme();
   return (
-    <div style={{ padding: 24 , marginTop:100}}>
+    <div style={{ color: darkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)', padding: 24 , marginTop:100}}>
       <Title level={2} style={{ color: 'white' }}>{t('discover.title')}</Title>
       <Text type="secondary" style={{ color: 'white' }}>{t('disconnect.connectPrompt')}</Text>
 

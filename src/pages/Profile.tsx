@@ -20,21 +20,25 @@ import {
   SettingOutlined,
   GlobalOutlined,
   UserOutlined,
+  MoonOutlined,
+  SunOutlined
 } from '@ant-design/icons';
 import { useWalletStore } from '../store/walletStore';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // 引入 useTranslation
+import { useTheme } from '../components/ThemeContext';
 
 const { Title, Text } = Typography;
 
 const Profile = () => {
   const { t, i18n } = useTranslation(); // 使用 useTranslation Hook
+  const { darkMode,toggleTheme } = useTheme();
   const { address, setAddress } = useWalletStore();
   const [balance, setBalance] = useState('0.0000');
   const [network, setNetwork] = useState('未知');
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
   // const [language, setLanguage] = useState('zh');
 
 
@@ -43,7 +47,7 @@ const Profile = () => {
   }, [address]);
 
   // 语言切换处理函数
-  const handleLanguageChange = (value:any) => {
+  const handleLanguageChange = (value: any) => {
     i18n.changeLanguage(value);
   };
   // ... (其他函数保持不变)
@@ -114,8 +118,8 @@ const Profile = () => {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 900, margin: '0 auto', marginTop:100 }}>
-       <Card bordered style={{ background: 'rgba(174, 97, 97, 0.5)', border: 'none' }}>
+    <div style={{ color: darkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)', padding: 24, maxWidth: 900, margin: '0 auto', marginTop: 100 }}>
+      <Card bordered style={{ background: 'rgba(174, 97, 97, 0.5)', border: 'none' }}>
         <Space align="center" style={{ width: '100%' }}>
           <Avatar size={64} icon={<UserOutlined />} />
           <div>
@@ -176,15 +180,18 @@ const Profile = () => {
                   value={i18n.language} // 绑定当前语言
                   onChange={handleLanguageChange} // 使用新的切换函数
                   options={[
-                    { label: t('language_zh'), value: 'zh' },
-                    { label: t('language_en'), value: 'en' },
+                    { label: '中文', value: 'zh' },
+                    { label: 'English', value: 'en' },
+                    { label: '한국어', value: 'ko' },
+                    { label: '日本語', value: 'ja' },
                   ]}
                   style={{ width: 120 }}
                 />
               </Space>
               <Space>
                 <span>{t('dark_mode')}:</span>
-                <Switch checked={darkMode} onChange={setDarkMode} />
+                <Switch checked={darkMode} onChange={toggleTheme}  checkedChildren={<MoonOutlined />}
+      unCheckedChildren={<SunOutlined />} />
               </Space>
             </Space>
           </>
@@ -212,7 +219,7 @@ const Profile = () => {
               />
               <Text code copyable>{address}</Text>
             </>
-            
+
           )}
         </Space>
       </Modal>

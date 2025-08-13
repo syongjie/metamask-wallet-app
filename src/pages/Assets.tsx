@@ -1,150 +1,133 @@
-import { useEffect, useState,useMemo } from 'react';
-import { Statistic, Row, Col, Button, Space, List, Avatar, Divider,Skeleton,Empty } from 'antd';
+import { useState, useMemo, useEffect } from 'react';
+import { 
+  Statistic, Row, Col, Button, Space, List, Avatar, Divider, 
+  Skeleton, Empty, Modal, Form, Input, Select, message 
+} from 'antd';
 import { SwapOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-// import { getTokenBalance } from '../utils/Balance ';
 import { ethers } from 'ethers';
-// import { getNativeBalance } from '../utils/NBNbalance';
 import { useMultiTokenBalances, type TokenMeta } from '../utils/UseMultitokenBalance';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../components/ThemeContext';
 
-// USDT余额信息
-// const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // 以太坊USDT官方合约地址
-// const tokenAddress = "0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47"; // Bsc测试网合约地址
+const { Option } = Select;
+
 const Assets = () => {
   const { t } = useTranslation();
-  // type TokenBalance = {
-  //   symbol: string;
-  //   balance: string;
-  //   rawBalance: bigint;
-  // };
+  const { darkMode } = useTheme();
+  const [form] = Form.useForm();
+  const [transferModalVisible, setTransferModalVisible] = useState(false);
+  const [transferLoading, setTransferLoading] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<TokenMeta | null>(null);
 
-  // const [tokenBalance, setTokenBalance] = useState<TokenBalance | null>(null);
-  // const [_userAddress, setUserAddress] = useState<string | null>(null);
-
-  // const provider = new ethers.BrowserProvider(window.ethereum);
   const provider = useMemo(() => new ethers.BrowserProvider(window.ethereum), []);
   const [userAddress, setUserAddress] = useState<string | null>(null);
-  // const [tokenList, setTokenList] = useState<TokenMeta[]>([]);
+  
   const tokenList = useMemo<TokenMeta[]>(() => [
-  {
-    name: 'BNB',
-    symbol: 'BNB',
-    address: null,
-    icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
-  },
-  {
-    name: 'USDT',
-    symbol: 'USDT',
-    address: '0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47', // BSC Testnet
-    icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
-  },
-], []);
-  const { balances,loading } = useMultiTokenBalances(userAddress, provider, tokenList);
- 
-  // 初始化用户地址和代币列表
+    {
+      name: 'BNB',
+      symbol: 'BNB',
+      address: null,
+      icon: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png',
+    },
+    {
+      name: 'USDT',
+      symbol: 'USDT',
+      address: '0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47', // BSC Testnet
+      icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
+    },
+  ], []);
+
+  const { balances, loading } = useMultiTokenBalances(userAddress, provider, tokenList);
+
   useEffect(() => {
     const init = async () => {
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-      setUserAddress(address);
+      try {
+        const signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        setUserAddress(address);
+      } catch (error) {
+        console.error(t('fetch_address_error'), error);
+      }
     };
     init();
-  }, []);
+  }, [provider, t]);
 
-  // NBN余额信息
-  // useEffect(() => {
-  //   const fetchBalance = async () => {
-  //     try {
-  //       const provider = new ethers.BrowserProvider(window.ethereum);
-  //       const signer = await provider.getSigner();
-  //       const address = await signer.getAddress();
-  //       setUserAddress(address);
-
-  //       const result = await getNativeBalance(address, provider);
-  //       console.log("BNB Balance Result:", result);
-  //       setTokenBalance(result);
-  //     } catch (error) {
-  //       console.error("获取 BNB 余额失败:", error);
-  //     }
-  //   };
-
-  //   fetchBalance();
-  // }, []);
-
-
-  // useEffect(() => {
-  //   const fetchBalance = async () => {
-  //     try {
-  //       const provider = new ethers.BrowserProvider(window.ethereum);
-  //       const signer = await provider.getSigner();
-  //       const address = await signer.getAddress();
-  //       setUserAddress(address);
-
-  //       const result = await getTokenBalance(address, tokenAddress, provider);
-  //       console.log("Token Balance Result:", result);
-  //       setTokenBalance(result);
-  //     } catch (error) {
-  //       console.error("获取代币余额失败:", error);
-  //     }
-  //   };
-
-  //   fetchBalance();
-  // }, []);
-
-  // 使用 useMemo 优化 mockTokens 构建
   const mockTokens = useMemo(() => {
-    return balances.map(item => {
-      const balance = parseFloat(item.balance || '0');
-      const valueUSD = isNaN(balance)
-        ? 0
-        : balance * (item.symbol === 'BNB' ? 500 : 1); // 手动估值逻辑
-      return {
-        name: item.symbol,
-        symbol: item.symbol,
-        balance: item.balance,
-        valueUSD,
-        icon: item.icon,
-      };
-    });
+    return balances.map(item => ({
+      ...item,
+      valueUSD: parseFloat(item.balance || '0') * (item.symbol === 'BNB' ? 500 : 1)
+    }));
   }, [balances]);
 
   const totalValueUSD = useMemo(() => {
-    console.log(mockTokens);
-    
-    if (loading) return 0;
-    return mockTokens.reduce((sum, item) => {
-      const v = typeof item.valueUSD === 'number' && !isNaN(item.valueUSD) ? item.valueUSD : 0;
-      return sum + v;
-    }, 0);
+    return loading ? 0 : mockTokens.reduce((sum, item) => sum + (item.valueUSD || 0), 0);
   }, [mockTokens, loading]);
 
+  // 转账功能
+  const handleTransfer = async (values: {
+    token: string;
+    amount: string;
+    recipient: string;
+  }) => {
+    setTransferLoading(true);
+    try {
+      const token = tokenList.find(t => t.symbol === values.token);
+      if (!token) throw new Error(t('token_not_found'));
 
-  // const mockTokens = [
-  //   {
-  //     name: 'ETH',
-  //     symbol: 'ETH',
-  //     balance: '1.245',
-  //     valueUSD: 4000,
-  //     icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-  //   },
-  //   {
-  //     name: tokenBalance?.symbol || 'USDT',
-  //     symbol: tokenBalance?.symbol || 'USDT',
-  //     balance: tokenBalance?.balance || '0',
-  //     valueUSD: parseFloat(tokenBalance?.balance || '0'),
-  //     icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png',
-  //   },
-  // ];
+      const signer = await provider.getSigner();
+      
+      if (token.address) {
+        // ERC20 代币转账
+        const contract = new ethers.Contract(
+          token.address,
+          ['function transfer(address to, uint256 amount) returns (bool)'],
+          signer
+        );
+        const tx = await contract.transfer(
+          values.recipient,
+          ethers.parseUnits(values.amount, 18) // 假设都是18位小数
+        );
+        await tx.wait();
+      } else {
+        // 原生币转账 (如BNB/ETH)
+        const tx = await signer.sendTransaction({
+          to: values.recipient,
+          value: ethers.parseEther(values.amount)
+        });
+        await tx.wait();
+      }
+
+      message.success(t('transfer_success'));
+      setTransferModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      console.error(t('transfer_error'), error);
+      message.error(t('transfer_failed'));
+    } finally {
+      setTransferLoading(false);
+    }
+  };
 
   return (
-    <div style={{ padding: 24 , marginTop:100}}>
-      
+    <div style={{ 
+      color: darkMode ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+      padding: 24, 
+      marginTop: 100
+    }}>
+      {/* 资产概览 */}
       <Row gutter={16}>
         <Col span={24}>
           {loading ? (
             <Skeleton active paragraph={{ rows: 1 }} />
           ) : (
-            <Statistic  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none',borderRadius:'20px',minHeight:'100px',padding:'18px 20px', }}
+            <Statistic
+              style={{ 
+                backgroundColor: darkMode ? 'rgba(74, 74, 74, 0.5)' : 'rgba(190, 152, 152, 0.5)',
+                border: 'none',
+                borderRadius: '20px',
+                minHeight: '100px',
+                padding: '18px 20px',
+              }}
               title={t('assets.totalValue')}
               value={totalValueUSD}
               precision={2}
@@ -157,18 +140,52 @@ const Assets = () => {
 
       <Divider />
 
+      {/* 操作按钮 */}
       <Row gutter={16} style={{ marginBottom: 20 }}>
         <Col>
           <Space>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="primary" icon={<UploadOutlined />}>{t('assets.transfer')}</Button>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="default" icon={<DownloadOutlined />}>{t('assets.receive')}</Button>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="dashed" icon={<SwapOutlined />}>{t('assets.swap')}</Button>
+            <Button 
+              style={{ 
+                backgroundColor: darkMode ? 'rgba(100, 50, 50, 0.5)' : 'rgba(153, 79, 79, 0.5)',
+                border: 'none'
+              }} 
+              type="primary" 
+              icon={<UploadOutlined />}
+              onClick={() => setTransferModalVisible(true)}
+            >
+              {t('assets.transfer')}
+            </Button>
+            <Button 
+              style={{ 
+                backgroundColor: darkMode ? 'rgba(100, 50, 50, 0.5)' : 'rgba(153, 79, 79, 0.5)',
+                border: 'none'
+              }} 
+              type="default" 
+              icon={<DownloadOutlined />}
+            >
+              {t('assets.receive')}
+            </Button>
+            <Button 
+              style={{ 
+                backgroundColor: darkMode ? 'rgba(100, 50, 50, 0.5)' : 'rgba(153, 79, 79, 0.5)',
+                border: 'none'
+              }} 
+              type="dashed" 
+              icon={<SwapOutlined />}
+            >
+              {t('assets.swap')}
+            </Button>
           </Space>
         </Col>
       </Row>
 
+      {/* 资产列表 */}
       <Row gutter={16}>
-        <Col span={24}  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none',borderRadius:'20px', }}>
+        <Col span={24} style={{ 
+          backgroundColor: darkMode ? 'rgba(74, 74, 74, 0.5)' : 'rgba(190, 152, 152, 0.5)',
+          border: 'none',
+          borderRadius: '20px',
+        }}>
           {loading ? (
             <Skeleton active paragraph={{ rows: 4 }} />
           ) : !userAddress ? (
@@ -191,6 +208,97 @@ const Assets = () => {
           )}
         </Col>
       </Row>
+
+      {/* 转账模态框 */}
+      <Modal
+        title={t('assets.transfer')}
+        open={transferModalVisible}
+        onCancel={() => setTransferModalVisible(false)}
+        footer={null}
+        centered
+        styles={{
+          header: { background: darkMode ? '#1f1f1f' : undefined },
+          content: { background: darkMode ? '#1f1f1f' : undefined },
+        }}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleTransfer}
+          initialValues={{ token: mockTokens[0]?.symbol }}
+        >
+          <Form.Item
+            name="token"
+            label={t('assets.token')}
+            rules={[{ required: true, message: t('token_required') }]}
+          >
+            <Select
+              placeholder={t('select_token')}
+              onChange={(value) => setSelectedToken(tokenList.find(t => t.symbol === value) || null)}
+            >
+              {mockTokens.map(token => (
+                <Option key={token.symbol} value={token.symbol}>
+                  <Space>
+                    <Avatar src={token.icon} size="small" />
+                    {token.name} ({token.symbol})
+                  </Space>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="amount"
+            label={t('assets.amount')}
+            rules={[
+              { required: true, message: t('amount_required') },
+              { 
+                validator: (_, value) => {
+                  if (value && parseFloat(value) <= 0) {
+                    return Promise.reject(new Error(t('amount_invalid')));
+                  }
+                  return Promise.resolve();
+                }
+              }
+            ]}
+          >
+            <Input 
+              placeholder={t('enter_amount')} 
+              suffix={selectedToken?.symbol} 
+              type="number"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="recipient"
+            label={t('assets.recipient')}
+            rules={[
+              { required: true, message: t('recipient_required') },
+              {
+                validator: (_, value) => {
+                  if (value && !ethers.isAddress(value)) {
+                    return Promise.reject(new Error(t('address_invalid')));
+                  }
+                  return Promise.resolve();
+                }
+              }
+            ]}
+          >
+            <Input placeholder={t('enter_recipient_address')} />
+          </Form.Item>
+
+          <Form.Item>
+            <Button 
+              type="primary" 
+              htmlType="submit" 
+              loading={transferLoading}
+              block
+            >
+              {t('confirm_transfer')}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
