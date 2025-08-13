@@ -13,5 +13,56 @@
   "language": "语言",
   "language_zh": "简体中文",
   "language_en": "English",
-  "dark_mode": "夜间模式"
+  "dark_mode": "夜间模式",
+  "home": {
+    "title": "欢迎使用链上钱包",
+    "subtitle": "一个连接您与 Web3 世界的安全通道",
+    "connect_wallet": "连接钱包",
+    "wallet_connected": "钱包已连接",
+    "connect_success": "连接成功"
+  },
+   "assets": {
+    "totalValue": "总资产估值（USD）",
+    "transfer": "转账",
+    "receive": "收款",
+    "swap": "闪兑",
+    "connectWallet": "请先连接钱包查看资产",
+    "balance": "余额"
+  },
+   "market": {
+    "title": "市场行情",
+    "token": "代币",
+    "price": "价格 (USD)",
+    "change24h": "24h 涨跌幅",
+    "network": "网络"
+  },
+   "discover": {
+    "title": "发现热门 DApps",
+    "connectPrompt": "连接钱包后体验 Web3 世界的精彩",
+    "uniswapDesc": "去中心化交易平台，支持Token闪兑",
+    "openseaDesc": "全球最大NFT市场",
+    "zapperDesc": "资产管理 & DeFi 控制台",
+    "defi": "DeFi",
+    "nft": "NFT",
+    "tool": "工具",
+    "openDapp": "打开 DApp"
+  },
+  "networks": {
+    "currentNetwork": "当前网络",
+    "ethereumMainnet": "以太坊主网",
+    "sepoliaTestnet": "Sepolia 测试网",
+    "goerliTestnet": "Goerli 测试网",
+    "polygonMainnet": "Polygon 主网",
+    "unknownNetwork": "当前网络 ({{name}})",
+    "fetchFailed": "无法获取网络",
+    "noMetaMask": "未检测到 MetaMask",
+    "fetchError": "获取网络失败:"
+  },
+   "bottomTab": {
+    "home": "首页",
+    "assets": "资产",
+    "market": "市场",
+    "discover": "发现",
+    "profile": "我的"
+  }
 }

@@ -5,11 +5,13 @@ import { SwapOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icon
 import { ethers } from 'ethers';
 // import { getNativeBalance } from '../utils/NBNbalance';
 import { useMultiTokenBalances, type TokenMeta } from '../utils/UseMultitokenBalance';
+import { useTranslation } from 'react-i18next';
 
 // USDT余额信息
 // const tokenAddress = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // 以太坊USDT官方合约地址
 // const tokenAddress = "0x8301F2213c0eeD49a7E28Ae4c3e91722919B8B47"; // Bsc测试网合约地址
 const Assets = () => {
+  const { t } = useTranslation();
   // type TokenBalance = {
   //   symbol: string;
   //   balance: string;
@@ -135,7 +137,7 @@ const Assets = () => {
   // ];
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24 , marginTop:100}}>
       
       <Row gutter={16}>
         <Col span={24}>
@@ -143,7 +145,7 @@ const Assets = () => {
             <Skeleton active paragraph={{ rows: 1 }} />
           ) : (
             <Statistic  style={{ backgroundColor: 'rgba(190, 152, 152, 0.5)', border: 'none',borderRadius:'20px',minHeight:'100px',padding:'18px 20px', }}
-              title="总资产估值（USD）"
+              title={t('assets.totalValue')}
               value={totalValueUSD}
               precision={2}
               valueStyle={{ color: '#3f8600' }}
@@ -158,9 +160,9 @@ const Assets = () => {
       <Row gutter={16} style={{ marginBottom: 20 }}>
         <Col>
           <Space>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="primary" icon={<UploadOutlined />}>转账</Button>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="default" icon={<DownloadOutlined />}>收款</Button>
-            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="dashed" icon={<SwapOutlined />}>闪兑</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="primary" icon={<UploadOutlined />}>{t('assets.transfer')}</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="default" icon={<DownloadOutlined />}>{t('assets.receive')}</Button>
+            <Button style={{ backgroundColor: 'rgba(153, 79, 79, 0.5)', border: 'none' }} type="dashed" icon={<SwapOutlined />}>{t('assets.swap')}</Button>
           </Space>
         </Col>
       </Row>
@@ -170,7 +172,7 @@ const Assets = () => {
           {loading ? (
             <Skeleton active paragraph={{ rows: 4 }} />
           ) : !userAddress ? (
-            <Empty description="请先连接钱包查看资产" />
+            <Empty description={t('assets.connectWallet')} />
           ) : (
             <List
               itemLayout="horizontal"
@@ -180,7 +182,7 @@ const Assets = () => {
                   <List.Item.Meta
                     avatar={<Avatar src={item.icon} />}
                     title={`${item.name} (${item.symbol})`}
-                    description={`余额: ${item.balance}`}
+                    description={`${t('assets.balance')}: ${item.balance}`}
                   />
                   <div>${item.valueUSD.toFixed(2)}</div>
                 </List.Item>

@@ -25,7 +25,7 @@ i18n
       escapeValue: false, // react 已经自带 xss 防护
     },
     detection: {
-      order: ['navigator'], // 优先使用浏览器语言检测
+      order: ['localStorage','navigator'], // 优先使用浏览器语言检测
       caches: ['localStorage'], // 将用户选择的语言缓存到 localStorage
     },
   });

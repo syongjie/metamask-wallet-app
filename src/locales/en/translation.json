@@ -13,5 +13,56 @@
   "language": "Language",
   "language_zh": "简体中文",
   "language_en": "English",
-  "dark_mode": "Dark Mode"
+  "dark_mode": "Dark Mode",
+  "home": {
+    "title": "Welcome to Blockchain Wallet",
+    "subtitle": "A secure gateway connecting you to the Web3 world",
+    "connect_wallet": "Connect Wallet",
+    "wallet_connected": "Wallet Connected",
+    "connect_success": "Connected Successfully"
+  },
+  "assets": {
+    "totalValue": "Total Assets (USD)",
+    "transfer": "Transfer",
+    "receive": "Receive",
+    "swap": "Swap",
+    "connectWallet": "Please connect wallet to view assets",
+    "balance": "Balance"
+  },
+  "market": {
+    "title": "Market",
+    "token": "Token",
+    "price": "Price (USD)",
+    "change24h": "24h Change",
+    "network": "Network"
+  },
+  "discover": {
+    "title": "Discover Popular DApps",
+    "connectPrompt": "Connect your wallet to explore the Web3 world",
+    "uniswapDesc": "Decentralized exchange supporting token swaps",
+    "openseaDesc": "The world's largest NFT marketplace",
+    "zapperDesc": "Asset management & DeFi dashboard",
+    "defi": "DeFi",
+    "nft": "NFT",
+    "tool": "Tool",
+    "openDapp": "Open DApp"
+  },
+  "networks": {
+    "currentNetwork": "Current Network",
+    "ethereumMainnet": "Ethereum Mainnet",
+    "sepoliaTestnet": "Sepolia Testnet",
+    "goerliTestnet": "Goerli Testnet",
+    "polygonMainnet": "Polygon Mainnet",
+    "unknownNetwork": "Current Network ({{name}})",
+    "fetchFailed": "Failed to get network",
+    "noMetaMask": "MetaMask not detected",
+    "fetchError": "Failed to fetch network:"
+  },
+  "bottomTab": {
+    "home": "Home",
+    "assets": "Assets",
+    "market": "Market",
+    "discover": "Discover",
+    "profile": "Profile"
+  }
 }

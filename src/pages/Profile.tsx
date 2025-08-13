@@ -114,7 +114,7 @@ const Profile = () => {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ padding: 24, maxWidth: 900, margin: '0 auto', marginTop:100 }}>
        <Card bordered style={{ background: 'rgba(174, 97, 97, 0.5)', border: 'none' }}>
         <Space align="center" style={{ width: '100%' }}>
           <Avatar size={64} icon={<UserOutlined />} />
@@ -171,7 +171,7 @@ const Profile = () => {
             <Space direction="vertical" style={{ width: '100%' }}>
               <Space>
                 <GlobalOutlined />
-                <span>{t('language')}：</span>
+                <span>{t('language')}:</span>
                 <Select
                   value={i18n.language} // 绑定当前语言
                   onChange={handleLanguageChange} // 使用新的切换函数
@@ -183,7 +183,7 @@ const Profile = () => {
                 />
               </Space>
               <Space>
-                <span>{t('dark_mode')}：</span>
+                <span>{t('dark_mode')}:</span>
                 <Switch checked={darkMode} onChange={setDarkMode} />
               </Space>
             </Space>

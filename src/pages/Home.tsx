@@ -6,6 +6,7 @@ import { useWalletStore } from '../store/walletStore';
 import { WalletOutlined } from '@ant-design/icons';
 // import { ethers } from 'ethers';
 import NetworkAlert from '../components/NetworkAlert';
+import { useTranslation } from 'react-i18next';
 
 declare global {
   interface Window {
@@ -16,6 +17,7 @@ declare global {
 const { Title, Text } = Typography;
 
 const Home = () => {
+   const { t } = useTranslation();
   const { address, setAddress } = useWalletStore();
   // const [network, setNetwork] = useState<string>('未知');
 
@@ -23,7 +25,7 @@ const Home = () => {
     try {
       const addr = await connectWallet();
       setAddress(addr);
-      message.success('连接成功: ' + addr);
+      message.success(t('connect_success') + ': ' + addr);
     } catch (err: any) {
       message.error(err.message);
     }
@@ -42,7 +44,7 @@ const Home = () => {
   // }, [address]);
 
   return (
-    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto', }}>
+    <div style={{ padding: 32, maxWidth: 600, margin: '0 auto', marginTop:100 }}>
       <Card
         bordered={false}
         style={{ textAlign: 'center', backgroundColor: 'rgba(0, 0, 0, 0)' }}
@@ -54,8 +56,8 @@ const Home = () => {
           />
         }
       >
-        <Title level={2}>欢迎使用链上钱包</Title>
-        <Text type="secondary">一个连接您与 Web3 世界的安全通道</Text>
+        <Title level={2}>{t('home.title')}</Title>
+        <Text type="secondary">{t('home.subtitle')}</Text>
 
         <div style={{ marginTop: 24 }}>
           <Space direction="vertical" size="large">
@@ -65,7 +67,9 @@ const Home = () => {
               size="large"
               onClick={handleConnect}
             >
-              {address ? `钱包已连接：${address.slice(0, 6)}...${address.slice(-4)}` : '连接钱包'}
+               {address
+                ? `${t('home.wallet_connected')}：${address.slice(0, 6)}...${address.slice(-4)}`
+                : t('home.connect_wallet')}
             </Button>
 
             {

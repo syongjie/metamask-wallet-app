@@ -2,26 +2,28 @@
 import { HomeOutlined, WalletOutlined, AppstoreOutlined, CompassOutlined, UserOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const BottomTab = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
+  const iconStyle = { fontSize: '20px' };
 
   return (
     <Menu
       mode="horizontal"
       selectedKeys={[location.pathname]}
       onClick={({ key }) => navigate(key)}
-      style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 100, borderTop: '1px solid #eee',display: 'flex',justifyContent:'center', backgroundColor: 'rgba(161, 155, 155, 0.5)' }}
+      style={{ position: 'fixed', top: 0, width: '100%', height: 70, zIndex: 100, borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', fontSize: 20, backgroundColor: 'rgba(161, 155, 155, 0.5)' }}
     >
-      <Menu.Item key="/home" icon={<HomeOutlined />}>首页</Menu.Item>
-      <Menu.Item key="/assets" icon={<WalletOutlined />}>资产</Menu.Item>
-      <Menu.Item key="/market" icon={<AppstoreOutlined />}>市场</Menu.Item>
-      <Menu.Item key="/discover" icon={<CompassOutlined />}>发现</Menu.Item>
-      <Menu.Item key="/profile" icon={<UserOutlined />}>我的</Menu.Item>
+      <Menu.Item key="/home" icon={<HomeOutlined style={iconStyle} />}> {t('bottomTab.home')}</Menu.Item>
+      <Menu.Item key="/assets" icon={<WalletOutlined style={iconStyle} />}> {t('bottomTab.assets')}</Menu.Item>
+      <Menu.Item key="/market" icon={<AppstoreOutlined style={iconStyle} />}>{t('bottomTab.market')}</Menu.Item>
+      <Menu.Item key="/discover" icon={<CompassOutlined style={iconStyle} />}>{t('bottomTab.discover')}</Menu.Item>
+      <Menu.Item key="/profile" icon={<UserOutlined style={iconStyle} />}>{t('bottomTab.profile')}</Menu.Item>
     </Menu>
   );
 };
 
 export default BottomTab;
-    
