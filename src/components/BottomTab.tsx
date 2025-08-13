@@ -23,7 +23,7 @@ const BottomTab = () => {
       onClick={({ key }) => navigate(key)}
       style={{ position: 'fixed', top: 0, width: '100%', height: 70, zIndex: 100, borderTop: `1px solid ${darkMode ? '#303030' : '#eee'}`, display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', fontSize: 20,  backgroundColor: darkMode ? 'rgba(30, 30, 30, 0.8)' : 'rgba(161, 155, 155, 0.5)' }}
     >
-      <img src="../public/872c23112cd3a913cd3c50e27ee93ff5.jpeg" style={{'width':60,'height':60}} alt="" onClick={gohome} />
+      <img src="../src/assets/react.svg" style={{'width':60,'height':60}} alt="" onClick={gohome} />
       <Menu.Item key="/home" icon={<HomeOutlined style={iconStyle} />}> {t('bottomTab.home')}</Menu.Item>
       <Menu.Item key="/assets" icon={<WalletOutlined style={iconStyle} />}> {t('bottomTab.assets')}</Menu.Item>
       <Menu.Item key="/market" icon={<AppstoreOutlined style={iconStyle} />}>{t('bottomTab.market')}</Menu.Item>
